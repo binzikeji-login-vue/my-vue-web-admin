@@ -40,27 +40,14 @@
     },
     methods: {
       onSubmit(form) {
-          let user = this.getUser(this.form.username, this.form.password);
-          console.log(user);
+        this.jiaoyan(form, "/main");
       },
-      getUser(loginCode, password) {
-        console.log(loginCode);
-        console.log(password);
-        this.$axios.post('/api/users/login', {
-          loginCode: loginCode,
-          password: password
-        })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      },
-      jiaoyan(form){
+      jiaoyan(form, url){
         this.$refs[form].validate((valid) => {
           if (valid) {
-            return true;
+            this.$store.dispatch("asyncUpdateToken", true);
+            console.log("11111"+this.$store.getters.getToken);
+            this.$router.push(url);
           } else {
             this.$message({
               showClose: true,
@@ -70,7 +57,8 @@
             return false;
           }
         });
-      }
+      },
+
     }
   }
 </script>
