@@ -1,30 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import token from "./modules/token";
+import user from "./modules/user";
+
 Vue.use(Vuex);
 
-const state = {
-  token: '',
-};
-const mutations = {
-  updateToken(state, data) {
-    state.token = data;
-  }
-};
-const actions = {
-  asyncUpdateToken(context, data) {
-    context.commit("updateToken", data);
-  }
-};
-const getters = {
-  getToken() {
-    return state.token;
-  }
-};
-
 export default new Vuex.Store({
-  state,
-  getters,
-  mutations,
-  actions
+  modules: {
+    token: token,
+    user: user
+  }
 });

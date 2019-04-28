@@ -46,7 +46,9 @@
         this.$refs[form].validate((valid) => {
           if (valid) {
             this.$store.dispatch("asyncUpdateToken", true);
-            console.log("11111"+this.$store.getters.getToken);
+            this.$store.dispatch("asyncUpdateUser", {username: this.form.username});
+            sessionStorage.setItem("token", JSON.stringify(this.$store.state.token));
+            sessionStorage.setItem("user", JSON.stringify(this.$store.state.user));
             this.$router.push(url);
           } else {
             this.$message({
@@ -58,7 +60,6 @@
           }
         });
       },
-
     }
   }
 </script>
