@@ -6,10 +6,6 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import axios from 'axios';
-
-Vue.prototype.axios = axios;
-
 import Vuex from 'vuex'
 import store from './store'
 
@@ -28,12 +24,6 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       next("/login");
-    }
-  } else if (to.path == '/login') {
-    if (token) {
-      next("/main");
-    } else {
-      next();
     }
   } else {
     next();

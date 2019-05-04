@@ -17,8 +17,8 @@
 
 <script>
   import Vue from 'vue'
-  import Axios from "axios";
-  Vue.prototype.$axios = Axios;
+  import axios from 'axios';
+  Vue.prototype.axios = axios;
 
   export default {
     name: "Login",
@@ -28,6 +28,7 @@
           username: '',
           password: ''
         },
+        info: {},
         rules: {
           username: [
             {required: true, message: '请输入账号', trigger: 'blur'}
@@ -43,13 +44,38 @@
         this.jiaoyan(form, "/main");
       },
       jiaoyan(form, url){
+        let that = this;
         this.$refs[form].validate((valid) => {
           if (valid) {
-            this.$store.dispatch("asyncUpdateToken", true);
-            this.$store.dispatch("asyncUpdateUser", {username: this.form.username});
-            sessionStorage.setItem("token", JSON.stringify(this.$store.state.token));
-            sessionStorage.setItem("user", JSON.stringify(this.$store.state.user));
-            this.$router.push(url);
+
+
+            axios.post('/api/users/login', {
+              loginCode: this.form.username,
+              password: this.form.password
+            })
+              .then(function (response) {
+                that.info = response.data.data;
+                console.log(that.info);
+                if (response.data.data != null){
+                  that.$store.dispatch("asyncUpdateToken", true);
+                  that.$store.dispatch("asyncUpdateUser", {username: that.info.loginCode});
+                  sessionStorage.setItem("token", JSON.stringify(that.$store.state.token));
+                  sessionStorage.setItem("user", JSON.stringify(that.$store.state.user));
+                  // that.$router.push({name: 'Main', query: {info: JSON.stringify(that.info)}});
+                  that.$router.push({name: 'Main'});
+                } else {
+                  that.$message({
+                    showClose: true,
+                    message: '账号或密码不正确',
+                    type: 'warning'
+                  });
+                }
+
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+
           } else {
             this.$message({
               showClose: true,
